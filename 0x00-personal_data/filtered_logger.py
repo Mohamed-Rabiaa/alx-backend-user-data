@@ -5,13 +5,12 @@ This module contains the filter_datum funtion
 
 import re
 import os
-from typing import List
 import logging
 import mysql.connector
+from typing import List
 
 
 PII_FIELDS = ("name", "email", "phone", "ssn", "password")
-
 
 def filter_datum(
         fields: List[str],
@@ -26,7 +25,6 @@ def filter_datum(
     return re.sub(pattern, lambda m: "{}={}".format(
         m.group().split('=')[0], redaction), message)
 
-
 def get_logger() -> logging.Logger:
     """
     get_logger
@@ -34,7 +32,7 @@ def get_logger() -> logging.Logger:
     logger = logging.getLogger("user_data")
     logger.setLevel(logging.INFO)
     logger.propagate = False
-
+    
     handler = logging.StreamHandler()
     handler.setLevel(logging.INFO)
     handler.setFormatter(RedactingFormatter(PII_FIELDS))
@@ -42,20 +40,18 @@ def get_logger() -> logging.Logger:
     logger.addHandler(handler)
     return logger
 
-
-def get_db():
+def get_db() -> mysql.connector.connection.MySQLConnection:
     """
     get_db
     """
     host = os.environ.get('PERSONAL_DATA_DB_HOST', 'localhost')
     user = os.environ.get('PERSONAL_DATA_DB_USERNAME', 'root')
     password = os.environ.get('PERSONAL_DATA_DB_PASSWORD', '')
-    database = os.environ.get('PERSONAL_DATA_DB_NAME')
-
+    database = os.environ.get('PERSONAL_DATA_DB_NAME', '')
+    
     return mysql.connector.connect(host=host, user=user,
                                    password=password, database=database)
-
-
+    
 class RedactingFormatter(logging.Formatter):
     """
     Redacting Formatter class
