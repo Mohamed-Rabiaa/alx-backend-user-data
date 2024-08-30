@@ -12,6 +12,7 @@ from typing import List
 
 PII_FIELDS = ("name", "email", "phone", "ssn", "password")
 
+
 def filter_datum(
         fields: List[str],
         redaction: str,
@@ -25,6 +26,7 @@ def filter_datum(
     return re.sub(pattern, lambda m: "{}={}".format(
         m.group().split('=')[0], redaction), message)
 
+
 def get_logger() -> logging.Logger:
     """
     get_logger
@@ -32,13 +34,14 @@ def get_logger() -> logging.Logger:
     logger = logging.getLogger("user_data")
     logger.setLevel(logging.INFO)
     logger.propagate = False
-    
+
     handler = logging.StreamHandler()
     handler.setLevel(logging.INFO)
     handler.setFormatter(RedactingFormatter(PII_FIELDS))
 
     logger.addHandler(handler)
     return logger
+
 
 def get_db() -> mysql.connector.connection.MySQLConnection:
     """
@@ -47,11 +50,16 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
     host = os.environ.get('PERSONAL_DATA_DB_HOST', 'localhost')
     user = os.environ.get('PERSONAL_DATA_DB_USERNAME', 'root')
     password = os.environ.get('PERSONAL_DATA_DB_PASSWORD', '')
-    database = os.environ.get('PERSONAL_DATA_DB_NAME', '')
-    
-    return mysql.connector.connect(host=host, user=user,
+    database = os.environ.get('PERSONAL_DATA_DB_NAME')
+
+    if not database:
+        raise ValueError(
+            "Database name is not set in the environment variables.")
+
+    return mysql.connector.connect(host=host, user=user, port=3306
                                    password=password, database=database)
-    
+
+
 class RedactingFormatter(logging.Formatter):
     """
     Redacting Formatter class
