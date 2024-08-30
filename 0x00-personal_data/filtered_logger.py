@@ -73,7 +73,8 @@ def main() -> None:
                 message = (
                     'name={}; email={}; phone={}; ssn={}; password={}; '
                     'ip={}; last_login={}; user_agent={};').format(
-                    name, email, phone, ssn, password, ip, last_login, user_agent)
+                    name, email, phone, ssn, password, ip, last_login,
+                        user_agent)
                 logger.info(message)
 
     except mysql.connector.Error as err:
