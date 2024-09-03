@@ -4,6 +4,8 @@ This module contains the BasicAuth class
 """
 
 from api.v1.auth.auth import Auth
+from base64 import b64decode
+import binascii
 
 
 class BasicAuth(Auth):
@@ -25,3 +27,20 @@ class BasicAuth(Auth):
         else:
             base64_part = authorization_header.split()[1]
             return base64_part
+
+    def decode_base64_authorization_header(
+            self,
+            base64_authorization_header: str) -> str:
+        """
+        Returns the decoded value of a Base64 string
+        base64_authorization_header
+        """
+        if base64_authorization_header is None \
+           or not isinstance(base64_authorization_header, str):
+            return None
+        try:
+            byte_str = b64decode(base64_authorization_header, validate=True)
+            value = byte_str.decode('utf-8')
+            return value
+        except (binascii.Error):
+            return None
