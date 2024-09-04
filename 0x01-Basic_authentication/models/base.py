@@ -86,11 +86,12 @@ class Base():
             json.dump(objs_json, f)
 
     def save(self):
-        """ Save current object
-        """
+        """ Save current object """
         s_class = self.__class__.__name__
         self.updated_at = datetime.utcnow()
+        print(f"Saving user with id: {self.id} and email: {self.email}")
         DATA[s_class][self.id] = self
+        print(f"Current DATA for {s_class}: {DATA[s_class]}")
         self.__class__.save_to_file()
 
     def remove(self):
