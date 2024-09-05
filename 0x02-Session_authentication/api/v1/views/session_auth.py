@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """
-session_auth view
+This module contains the session authentication views
 """
-
 
 from flask import request, jsonify
 from models.user import User
@@ -15,6 +14,8 @@ import os
 def login():
     """
     Handles all routes for the Session authentication
+    Return:
+        The JSON representation of a User object
     """
     email = request.form.get('email')
     if email is None or email == '':
