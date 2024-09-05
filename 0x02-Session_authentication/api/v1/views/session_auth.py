@@ -13,7 +13,7 @@ import os
                  strict_slashes=False)
 def login():
     """
-    Handles all routes for the Session authentication
+    Handles The login route for the Session authentication
     Return:
         The JSON representation of a User object
     """
@@ -39,3 +39,19 @@ def login():
         cookie_name = os.getenv('SESSION_NAME')
         response.set_cookie(cookie_name, session_id)
         return response
+
+
+@app_views.route('/auth_session/logout', methods=['DELETE'],
+                 strict_slashes=False)
+def logout():
+    """
+    Handles the logout for the session authentication
+    Returns:
+        An empty JSON dictionary with the status code 200
+    """
+    from api.v1.app import auth
+    value = auth.destroy_session(request)
+    if value is False:
+        abort(404)
+    else:
+        return (jsonify({}), 200)
