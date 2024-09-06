@@ -18,7 +18,12 @@ class SessionDBAuth(SessionExpAuth):
         Creates and stores new instance of UserSession
         and returns the Session ID
         """
+        if user_id is None or isinstance(user_id, str) is False:
+            return None
         session_id = super().create_session(user_id)
+        if session_id is None or isinstance(session_id, str) is False:
+            return None
+
         self.user_session = UserSession(user_id=user_id, session_id=session_id)
         self.user_session.save()
         return session_id
@@ -28,7 +33,7 @@ class SessionDBAuth(SessionExpAuth):
         Returns the User ID by requesting UserSession
         in the database based on session_id
         """
-        if session_id is None:
+        if session_id is None or isinstance(session_id, str) is False:
             return None
         try:
             sessions = UserSession.search({'session_id': session_id})

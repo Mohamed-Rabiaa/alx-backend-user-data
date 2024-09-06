@@ -24,7 +24,7 @@ class SessionExpAuth(SessionAuth):
         Overloads create_session
         """
         session_id = super().create_session(user_id)
-        if session_id is None:
+        if session_id is None or isinstance(session_id, str) is False:
             return None
         session_dictionary = {
             'user_id': user_id,
@@ -37,7 +37,7 @@ class SessionExpAuth(SessionAuth):
         """
         Overloads user_id_for_session_id
         """
-        if session_id is None:
+        if session_id is None or isinstance(session_id, str) is False:
             return None
         session_dictionary = self.user_id_by_session_id.get(session_id)
         user_id = session_dictionary.get('user_id')
