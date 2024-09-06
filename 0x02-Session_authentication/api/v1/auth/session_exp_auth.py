@@ -40,6 +40,8 @@ class SessionExpAuth(SessionAuth):
         if session_id is None or isinstance(session_id, str) is False:
             return None
         session_dictionary = self.user_id_by_session_id.get(session_id)
+        if session_dictionary is None:
+            return None
         user_id = session_dictionary.get('user_id')
         if user_id is None:
             return None
