@@ -59,12 +59,9 @@ class DB:
             The first row found in the users table as filtered by
             the method’s input arguments
         """
-        try:
-            user = self._session.query(User).filter_by(**kwargs).first()
-            if user is None:
-                raise NoResultFound
-        except InvalidRequestError:
-            raise
+        user = self._session.query(User).filter_by(**kwargs).first()
+        if user is None:
+            raise NoResultFound
         return user
 
     def update_user(self, user_id: str, **kwargs: dict) -> None:
@@ -79,9 +76,8 @@ class DB:
         user = self.find_user_by(id=user_id)
 
         for key, value in kwargs.items():
-            try:
-                if getattr(user, key) is not None:
-                    setattr(user, key, value)
-            except Exception:
+            if hasattr(user, key):
+                setattr(user, key, value)
+            else:
                 raise ValueError
         self._session.commit()
