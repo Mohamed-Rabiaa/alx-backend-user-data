@@ -84,7 +84,9 @@ class Auth:
         """
         Updates the corresponding user’s session ID to None
         """
-        self._db.update_user(used_id, session_id=None)
+        if user_id is None:
+            return None
+        self._db.update_user(user_id, session_id=None)
 
 
 def _hash_password(password: str) -> bytes:
