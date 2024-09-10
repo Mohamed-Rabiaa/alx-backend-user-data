@@ -29,11 +29,11 @@ class Auth:
         Returns:
             (User): The newly created User object
         """
-        try :
+        try:
             user = self._db.find_user_by(email=email)
             raise ValueError('User {} already exists'.format(email))
 
-        except NoResultFound :
+        except NoResultFound:
             hashed_password = _hash_password(password)
             return self._db.add_user(email, hashed_password)
 
@@ -50,6 +50,18 @@ class Auth:
             return False
         return True
 
+    def create_session(self, email: str) -> str:
+        """
+        """
+        try:
+            user = self._db.find_user_by(email=email)
+        except Exception:
+            return None
+        session_id = _generate_uuid()
+        self._db.update_user(user.id, session_id=session_id)
+        return session_id
+
+
 def _hash_password(password: str) -> bytes:
     """
     Hashes a password
@@ -61,6 +73,7 @@ def _hash_password(password: str) -> bytes:
         (bytes): The hashed password
     """
     return bcrypt.hashpw(password.encode(), bcrypt.gensalt())
+
 
 def _generate_uuid() -> str:
     """
