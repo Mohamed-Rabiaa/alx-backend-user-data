@@ -82,9 +82,11 @@ def get_reset_password_token() -> str:
     Handles /reset_password route
     """
     email = request.form.get('email')
-    if email is None:
+    reset_token = None
+    try:
+        reset_token = AUTH.get_reset_password_token(email)
+    except ValueError:
         abort(403)
-    reset_token = AUTH.get_reset_password_token(email)
     return jsonify({"email": email, "reset_token": reset_token}), 200
 
 
