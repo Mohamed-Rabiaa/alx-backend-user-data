@@ -30,11 +30,11 @@ class Auth:
         Returns:
             (User): The newly created User object
         """
-        try:
+        try :
             user = self._db.find_user_by(email=email)
             raise ValueError('User {} already exists'.format(email))
 
-        except NoResultFound:
+        except NoResultFound :
             hashed_password = _hash_password(password)
             return self._db.add_user(email, hashed_password)
 
@@ -80,6 +80,10 @@ class Auth:
             return None
         return user
 
+    def destroy_session(self, user_id: str) -> None:
+        """
+        """
+        self._db.update(used_id, session_id=None)
 
 def _hash_password(password: str) -> bytes:
     """
@@ -92,7 +96,6 @@ def _hash_password(password: str) -> bytes:
         (bytes): The hashed password
     """
     return bcrypt.hashpw(password.encode(), bcrypt.gensalt())
-
 
 def _generate_uuid() -> str:
     """
