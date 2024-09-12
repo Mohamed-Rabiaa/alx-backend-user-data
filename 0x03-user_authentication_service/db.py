@@ -47,7 +47,7 @@ class DB:
         session.commit()
         return user
 
-    def find_user_by(self, **kwargs: dict) -> User:
+    def find_user_by(self, **kwargs) -> User:
         """
         Finds the user with the kwargs arttributes
 
@@ -63,7 +63,7 @@ class DB:
         for key in kwargs:
             if key not in valid_columns:
                 raise InvalidRequestError
-                
+
         user = self._session.query(User).filter_by(**kwargs).first()
         if user is None:
             raise NoResultFound
