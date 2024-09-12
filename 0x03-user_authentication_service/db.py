@@ -49,16 +49,21 @@ class DB:
 
     def find_user_by(self, **kwargs: dict) -> User:
         """
-        Finds the user with the kwargs artributes
+        Finds the user with the kwargs arttributes
 
         Args:
-            kwargs (dict): a dictionay contains arbitrary keyword
+            kwargs (dict): a dictionary contains arbitrary keyword
             arguments
 
         Returns:
             The first row found in the users table as filtered by
             the method’s input arguments
         """
+        valid_columns = set(c.name for c in User.__table__.columns)
+        for key in kwargs:
+            if key not in valid_columns:
+                raise InvalidRequestError
+                
         user = self._session.query(User).filter_by(**kwargs).first()
         if user is None:
             raise NoResultFound
