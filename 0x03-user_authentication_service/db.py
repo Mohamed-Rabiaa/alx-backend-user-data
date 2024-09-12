@@ -79,9 +79,9 @@ class DB:
             we will update
         """
         user = self.find_user_by(id=user_id)
-
+        valid_columns = set(c.name for c in User.__table__.columns)
         for key, value in kwargs.items():
-            if hasattr(user, key):
+            if key in valid_columns:
                 setattr(user, key, value)
             else:
                 raise ValueError
